@@ -34,6 +34,8 @@ class BirthdayParadox:
         """ Функция описывает процесс моделирования совпадения дней рождения
         """
         for num_iter in range(Constants.COUNT_ITERATIONS_FOR_MODELING):
+            if num_iter%Constants.COUNT_ITERATIONS_FOR_PRINT_CURRENT_ITERATION == 0:
+                self._print_symbol_while_calculations()
             set_birhtday = self._generate_set_with_birthday()
             if self.count_people-len(set_birhtday) >= Constants.COUNT_PEOPLE_WITH_ONE_BIRHTDAY-1:
                 self.count_coincidences += 1        
@@ -55,7 +57,16 @@ class BirthdayParadox:
         """ Метод выводит на экран вероятность статистическую вероятность
             совпадения дней рождения у людей в группе
         """
-        print(f'Вероятность совпадения дня рождения у {Constants.COUNT_PEOPLE_WITH_ONE_BIRHTDAY} людей в одной группе из {self.count_people} человек составляет: {self._calculate_statistic()}%.')
+        print(f'\nВероятность совпадения дня рождения у {Constants.COUNT_PEOPLE_WITH_ONE_BIRHTDAY} людей в одной группе из {self.count_people} человек составляет: {self._calculate_statistic()}%.')
+    
+    def _print_symbol_while_calculations(self, sym: str = '.'):
+        """ Метод выводит на экран строку, показывая, что программа не зависла и
+            расчеты идут
+
+        Args:
+            sym (str): Строку, который необходимо напечатать. По умолчанию '.'.
+        """
+        print(sym, end='')
     
     def __init__(self) -> None:
         # Количество людей в группе (количество моделируемых чисел)
