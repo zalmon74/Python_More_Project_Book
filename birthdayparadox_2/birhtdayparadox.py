@@ -20,7 +20,7 @@ class BirthdayParadox:
         """ Метод генерирует множество, которое содержит номера дней, когда у 
             людей будет день рождение
         """
-        return set(random.randint(0, 364) for _ in range(self.count_people))
+        return set(random.randint(0, Constants.COUNT_DAYS_FOR_YEAR) for _ in range(self.count_people))
     
     def _get_count_people(self) -> int:
         """ Запрос у пользователя количество людей для моделирования
@@ -28,10 +28,10 @@ class BirthdayParadox:
         Returns:
             int: Введенное количество людей
         """
-        self.count_people = int(input('Введите количество людей в группе для моделирования: '))
+        self.count_people = int(input(Constants.STR_FOR_PRINT_INPUT_COUNT_PEOPLE))
     
     def _start_modeling(self) -> None:
-        """ Функция описывает процесс моделирования совпадения дней рождения
+        """ Метод описывает процесс моделирования совпадения дней рождения
         """
         for num_iter in range(Constants.COUNT_ITERATIONS_FOR_MODELING):
             if num_iter%Constants.COUNT_ITERATIONS_FOR_PRINT_CURRENT_ITERATION == 0:
