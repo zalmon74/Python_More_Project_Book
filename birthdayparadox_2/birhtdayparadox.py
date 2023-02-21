@@ -28,7 +28,13 @@ class BirthdayParadox:
         Returns:
             int: Введенное количество людей
         """
-        self.count_people = int(input(Constants.STR_FOR_PRINT_INPUT_COUNT_PEOPLE))
+        f_not_vaild_value = True
+        while f_not_vaild_value:
+            try:
+                self.count_people = int(input(Constants.STR_FOR_PRINT_INPUT_COUNT_PEOPLE))
+                f_not_vaild_value = False
+            except ValueError:
+                f_not_vaild_value = True
     
     def _start_modeling(self) -> None:
         """ Метод описывает процесс моделирования совпадения дней рождения
