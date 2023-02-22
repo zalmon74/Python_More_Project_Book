@@ -53,3 +53,47 @@ class Card:
     def __str__(self) -> str:
         return list_card_2_str_for_print([self,])
     
+
+class CardDeck:
+    """ Описывает игральную колоду карт
+    """
+    
+    def _generate_all_cards(self):
+        """ Метод формирует список со всеми существующими картами
+        """
+        self._all_cards = set()
+        for name, points in Constants.DICT_ALL_NAME_CARDS.items():
+            for suit in Constants.ALL_SUIT_FOR_GAME:
+                self._all_cards.add(Card(name, suit, points[0], points[1]))
+    
+    def _generate_deck_for_game(self):
+        """ Метод генерирует кортеж с играбельной колодой
+        """
+        self._deck = list(self._all_cards)
+        shuffle(self._deck)
+        
+    def __init__(self):
+        self._generate_all_cards()
+        self._generate_deck_for_game()
+    
+    def start_new_deck(self) -> None:
+        """ Метод позволяет начать новую колоду
+        """
+        self._generate_deck_for_game()
+    
+    def shuffle(self, count: int = 1) -> None:
+        """ Метод позволяет перемешать колоду "count" раз        
+
+        Args:
+            count (int): Количество перемешиваний. По умолчанию 1.
+        """
+        for _ in range(count):
+            shuffle(self._deck)
+    
+    def get_card(self) -> Card:
+        """ Метод позволяет получить следующую карту из колоды
+
+        Returns:
+            Card: Объект, который описывает карту из колоды
+        """
+        return self._deck.pop()
