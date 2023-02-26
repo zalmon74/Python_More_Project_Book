@@ -9,6 +9,8 @@ class Player:
     """ Класс игрока для игры в BlackJack
     """
     
+    # Дандеры
+    
     def __init__(self, name: str = 'Anonym', money: int = 1000) -> None:
         # Имя игрока
         self.name = name
@@ -17,6 +19,9 @@ class Player:
         # Карты на руке у игрока
         self._cards = []
        
+    def __eq__(self, __o: object) -> bool:
+        return self.name == __o.name
+    
     # Геттеры   
      
     def get_all_cards(self) -> list[Card]:
