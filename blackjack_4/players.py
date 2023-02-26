@@ -19,8 +19,11 @@ class Player:
         # Карты на руке у игрока
         self._cards = []
        
-    def __eq__(self, __o: object) -> bool:
-        return self.name == __o.name
+    def __eq__(self, another: object) -> bool:
+        return hasattr(another, 'name') and self.name == another.name
+    
+    def __hash__(self) -> int:
+        return self.name.__hash__()
     
     # Геттеры   
      
@@ -53,7 +56,7 @@ class Player:
     
     # Сеттеры
     
-    def set_card(self, card: Card | list[Card]) -> None:
+    def add_cards(self, card: Card | list[Card]) -> None:
         """ Добавляем заданные карты в руку игрока
 
         Args:
