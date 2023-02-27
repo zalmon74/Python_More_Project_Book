@@ -33,3 +33,14 @@ class Constants:
     
     # Количество очков необходимое для победы
     COUNT_POINTS_FOR_WIN = 21
+    # Максимальное количество играков
+    MAX_PLAYERS = 6
+    # Начальное количество карт у всех игроков
+    COUNT_CARDS_WITH_START_GAME_FOR_ALL_PLAYERS = 2
+    
+    # Количество денег у крупье (дилера)
+    COUNT_MONEY_OF_DEALER = 1_000_000_000
+    # Начальное количество карт у дилера
+    COUNT_CARDS_WITH_START_GAME_FOR_DEALER = 1
+    # Количество очков, при котором дилер перестает набирать карты
+    COUNT_POINTS_FOR_STOP_TAKE_CARDS_DEALER = 17
