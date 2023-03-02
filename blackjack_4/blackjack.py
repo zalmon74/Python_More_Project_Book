@@ -70,7 +70,7 @@ class BlackJack:
         """
         return len(self._players)
 
-    def get_dieler(self) -> Player:
+    def get_dealer(self) -> Player:
         """ Возвращает экземпляр класса Playr, который описывает дилера (крупье)
 
         Returns:
