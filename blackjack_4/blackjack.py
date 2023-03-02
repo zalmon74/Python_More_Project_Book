@@ -240,11 +240,12 @@ class BlackJack:
     def add_card_for_current_player(self) -> None:
         """ Метод добавляет одну карту для текущего игрока
         """
-        if self._ind_current_player < len(self._players):
+        if self._ind_current_player < len(self._players) and self._players[self._ind_current_player].get_points() < Constants.COUNT_POINTS_FOR_WIN:
             self._players[self._ind_current_player].add_cards(self._deck.get_card())
-        else: 
-            # Добавляем карту дилеру (крупье)
-            self._dealer.add_cards(self._deck.get_card())
+        elif self._ind_current_player >= len(self._players): 
+            if self._dealer.get_points() < Constants.COUNT_POINTS_FOR_WIN:
+                # Добавляем карту дилеру (крупье)
+                self._dealer.add_cards(self._deck.get_card())
         
         
 class MorePlayersForGame(Exception):
