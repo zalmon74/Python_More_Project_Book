@@ -121,9 +121,9 @@ def get_count_points_for_cards(cards: Card | list[Card], f_alter_points: bool = 
             output += cards.points
     if isinstance(cards, list) and (len(cards) > 0 and isinstance(cards[0], Card)):
         if f_alter_points:
-            output += sum([card.points for card in cards])
-        else:
             output += sum([card.alter_points for card in cards])
+        else:
+            output += sum([card.points for card in cards])
     else:
         raise ValueError(f'Входные данные "cards" не являеются объектом типа "Card", или list[Card], или list[Card] пустой.')
     # Если сумма карт больше "COUNT_POINTS_FOR_WIN", тогда некоторые карты имеют
