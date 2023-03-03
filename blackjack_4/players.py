@@ -94,6 +94,10 @@ class Player:
         else:            
             self._money += count_change
     
+    def clear_cards(self) -> None:
+        """ Метод позволяет очистить (удалить) карты у игрока
+        """
+        self._cards.clear()
         
 def get_count_points_for_cards(cards: Card | list[Card], f_alter_points: bool = False) -> int:
     """ Позволяет получить количество очков на руке у игрока
