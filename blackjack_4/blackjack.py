@@ -42,12 +42,14 @@ class BlackJack:
         Returns:
             dict[Player, bool]: Словарь с результатами для каждого игрока,
             который в качестве ключей содержит объект типа "Player", а данных
-            флаг победы (False - проиграл, True - победил)   
+            флаг победы (False - проиграл, True - победил, None - ничья)   
         """
         results = self.get_results()
         for player, f_win in results.items():
             # Если игрок победил, то прибавляем ему деньги, иначе отнимаем
-            if f_win:
+            if f_win is None:
+                continue
+            elif f_win:
                 player.change_count_money(self._bets[player])
                 self._dealer.change_count_money(0-self._bets[player])
             else:
@@ -128,8 +130,13 @@ class BlackJack:
         """
         output = dict()
         for player in self._players:
-            if player.get_points() > self._dealer.get_points() and \
+            if player.get_points() == self._dealer.get_points():
+                result = None
+            elif player.get_points() > self._dealer.get_points() and \
                player.get_points() <= Constants.COUNT_POINTS_FOR_WIN:
+                result = True
+            elif player.get_points() <= Constants.COUNT_POINTS_FOR_WIN and \
+                 self._dealer.get_points() > Constants.COUNT_POINTS_FOR_WIN:
                 result = True
             else:
                 result = False
@@ -205,7 +212,8 @@ class BlackJack:
                 [0] - флаг окончание игры
                 [1] - Словарь с результатами для каждого игрока,
                     который в качестве ключей содержит объект типа "Player", а
-                    данных флаг победы (False - проиграл, True - победил)   
+                    данных флаг победы (False - проиграл, True - победил, None - 
+                    ничья)   
         """
         output = self._dealer.get_points() >= Constants.COUNT_POINTS_FOR_STOP_TAKE_CARDS_DEALER
         results = None
