@@ -11,6 +11,11 @@ class CLISettings:
     TEXT_FOR_INPUT_COUNT_PEOPLES = 'Введите количество игроков (цифрой): '
     TEXT_FOR_INPUT_NAME_PLAYER = 'Введите имя игрока: '
     TEXT_FOR_INPUT_COUNT_MONEY = 'Введите начальное количество денег у игрока: '
+    TEXT_FOR_INPUT_BET = 'Введите вашу ставку на игру: '
+    TEXT_FOR_ADD_CARD_PLAYER = 'Еще'
+    TEXT_FOR_ENOUGH_CARDS_PLAYER = 'Достаточно'
+    TEXT_FOR_PLAY_AGAIN = 'Сыграть новую партию тем же составом'
+    TEXT_FOR_EXIT_IN_MAIN_MENU = 'Выйти в главное меню'
     
     # Правила для вывода пользователю
     TEXT_RULES = """Правила игры в BlackJack
