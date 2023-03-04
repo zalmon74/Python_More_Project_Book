@@ -4,10 +4,9 @@
 import os
 from msvcrt import getch
 from typing import Callable
-from time import sleep
 
 from .cli_settings import CLISettings
-from blackjack import BlackJack, Constants, NullMoneyPlayer
+from blackjack import BlackJack, Constants, NullMoneyPlayer, NullCountPlayersForGame
 from players import Player
 from card_deck import list_card_2_str_for_print
 
@@ -146,7 +145,6 @@ class CLIBlackJack:
                 print(f'Игрок "{player.name}" исключен из игры из-за нулевого баланса')
                 getch()
                 continue
-                
     
     def _add_players(self) -> None:
         """ Метод добавляет игроков для игры
@@ -235,12 +233,16 @@ class CLIBlackJack:
     def _start_game(self) -> None:
         """ Метод описывает взаимодействие игры и пользователя
         """
-        # Добавляем игроков в игру
-        self._add_players()
-        # Запускаем игровую партию
-        self._start_party_game()
-        # Выводим меню после партии игры
-        self._game_again_play_menu.start_menu()
+        try:
+            # Добавляем игроков в игру
+            self._add_players()
+            # Запускаем игровую партию
+            self._start_party_game()
+            # Выводим меню после партии игры
+            self._game_again_play_menu.start_menu()
+        except NullCountPlayersForGame:
+            # Пропускаем, чтобы вернуться в главное меню
+            pass
     
     def _add_card_for_current_player_in_game_menu(self) -> None:
         """ Метод добавляет карту для текущего игрока. Метод нужен для меню

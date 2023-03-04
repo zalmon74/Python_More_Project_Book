@@ -156,6 +156,8 @@ class BlackJack:
                 или ставка не типа данных "int"
             MorePlayersForGame: Задано большое количество игроков (мест больше нет)
             BigBetForPlayer: Ставка слишком большая, у игрока нет столько денег
+            RepeatPlayer: Игрок уже с таким именем в игре
+            NullMoneyPlayer: У игрока нулевой баланс
         """
         if not isinstance(player, Player):
             raise ValueError('Во входных данных игрок должен быть экземпляром класса "Player"', player)
@@ -199,6 +201,8 @@ class BlackJack:
         # Раздаем всем по две карты, а дилеру 1
         for num_card in range(Constants.COUNT_CARDS_WITH_START_GAME_FOR_DEALER):
             self._dealer.add_cards(self._deck.get_card())
+        if len(self._players) == 0 or len(self._bets) == 0:
+            raise NullCountPlayersForGame('Не добавлены игроки для игры')
         for num_card in range(Constants.COUNT_CARDS_WITH_START_GAME_FOR_ALL_PLAYERS):
             [self._players[ind].add_cards(self._deck.get_card()) for ind in range(len(self._players))]
         # Создаем генератор для игры
@@ -302,4 +306,11 @@ class NullMoneyPlayer(Exception):
     
     def __init__(self, text: str) -> None:
         self.txt = text
+
+
+class NullCountPlayersForGame(Exception):
+    """ Исключение вызывается при попытке начать игру с 0 человек
+    """
     
+    def __init__(self, text: str) -> None:
+        self.txt = text
