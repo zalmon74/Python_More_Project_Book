@@ -7,7 +7,7 @@ from typing import Callable
 from time import sleep
 
 from .cli_settings import CLISettings
-from blackjack import BlackJack, Constants
+from blackjack import BlackJack, Constants, NullMoneyPlayer
 from players import Player
 from card_deck import list_card_2_str_for_print
 
@@ -29,7 +29,7 @@ class CLIBlackJack:
             int: Введенное пользователем значение
         """
         value = None
-        while not value:
+        while not value and value != 0:
             try:
                 MenuCLI.clear_console()
                 if len(text_addition) > 0:
@@ -110,7 +110,7 @@ class CLIBlackJack:
         """
         text_additional = f'Игрок #{num_player}. Имя игрока: {name_player}. Максимальная ставка: {max_bet}.'
         bet = None
-        while not bet:
+        while not bet and bet != 0:
             bet = self._input_only_int(CLISettings.TEXT_FOR_INPUT_BET, text_additional)
             # Количество игроков не может иметь отрицательное значение и 
             # не должно превышать максимально допустимое значение игроков
@@ -134,10 +134,19 @@ class CLIBlackJack:
     def _add_players_for_game(self) -> None:
         """ Добавляем объекты с игроками в игру с их ставками
         """
-        for player, bet in zip(self._all_players, self._bets_players):
+        for player, bet in zip(self._all_players[:], self._bets_players[:]):
             # Перед добавлением, очищаем все карты у игрока
             player.clear_cards()
-            self._game.add_player_for_game(player, bet)
+            try:
+                self._game.add_player_for_game(player, bet)
+            except NullMoneyPlayer:
+                self._all_players.remove(player)
+                self._bets_players.remove(bet)
+                MenuCLI.clear_console()
+                print(f'Игрок "{player.name}" исключен из игры из-за нулевого баланса')
+                getch()
+                continue
+                
     
     def _add_players(self) -> None:
         """ Метод добавляет игроков для игры

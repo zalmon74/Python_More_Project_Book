@@ -169,6 +169,8 @@ class BlackJack:
             else:
                 if player in self._players:
                     raise RepeatPlayer('Игрок с таким именем в игре уже есть')
+                if player.get_count_money() <= 0:
+                    raise NullMoneyPlayer('У игрока нет денег для игры')
                 self._bets[player] = bet
                 self._players.append(player)
     
@@ -291,3 +293,13 @@ class RepeatPlayer(Exception):
     
     def __init__(self, text: str) -> None:
         self.txt = text
+      
+        
+class NullMoneyPlayer(Exception):
+    """ Исключение вызывается при попытке добавления игра с нулевым или 
+        отрицательным балансом
+    """
+    
+    def __init__(self, text: str) -> None:
+        self.txt = text
+    
