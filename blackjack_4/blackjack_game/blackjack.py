@@ -1,9 +1,9 @@
 """ Файл, который содержит описание класса для игры BlackJack
 """
 
-from constants import Constants
-from players import Player
-from card_deck import Card, CardDeck
+from .constants import Constants
+from .players import Player
+from .card_deck import Card, CardDeck
 
 
 class BlackJack:

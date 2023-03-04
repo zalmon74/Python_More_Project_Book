@@ -1,8 +1,8 @@
 """ Файл описывает класс игрока
 """
 
-from card_deck import Card
-from constants import Constants
+from .card_deck import Card
+from .constants import Constants
 
 
 class Player:

@@ -6,9 +6,9 @@ from msvcrt import getch
 from typing import Callable
 
 from .cli_settings import CLISettings
-from blackjack import BlackJack, Constants, NullMoneyPlayer, NullCountPlayersForGame
-from players import Player
-from card_deck import list_card_2_str_for_print
+from blackjack_game.blackjack import BlackJack, Constants, NullMoneyPlayer, NullCountPlayersForGame
+from blackjack_game.players import Player
+from blackjack_game.card_deck import list_card_2_str_for_print
 
 
 class CLIBlackJack:

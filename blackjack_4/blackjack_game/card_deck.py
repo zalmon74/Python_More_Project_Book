@@ -4,7 +4,7 @@
 from dataclasses import dataclass
 from random import shuffle
 
-from constants import Constants
+from .constants import Constants
 
 
 def list_card_2_str_for_print(lst_cards: list, sep: str = '\t') -> str:
