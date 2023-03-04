@@ -16,6 +16,7 @@ class CLISettings:
     TEXT_FOR_ENOUGH_CARDS_PLAYER = 'Достаточно'
     TEXT_FOR_PLAY_AGAIN = 'Сыграть новую партию тем же составом'
     TEXT_FOR_EXIT_IN_MAIN_MENU = 'Выйти в главное меню'
+    TEXT_FOR_REPEAT_PLAYER_NAME = 'Такое имя уже занято, введите другое'
     
     # Правила для вывода пользователю
     TEXT_RULES = """Правила игры в BlackJack

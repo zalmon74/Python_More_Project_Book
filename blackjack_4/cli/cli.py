@@ -88,7 +88,13 @@ class CLIBlackJack:
         output = []
         for ind_player in range(count_players):
             # +1 - чтобы нумерация игроков шла с 1 (для удобности клиентов)
-            output.append(self._create_object_players(ind_player+1))
+            player = self._create_object_players(ind_player+1)
+            # Изабавляем от повторений пользователей в игре
+            while player in output:
+                print('\n' + CLISettings.TEXT_FOR_REPEAT_PLAYER_NAME)
+                getch()
+                player = self._create_object_players(ind_player+1)
+            output.append(player)
         return output
     
     def _get_bet_player(self, num_player: int, name_player: str, max_bet: int) -> int:

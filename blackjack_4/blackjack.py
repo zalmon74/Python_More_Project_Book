@@ -167,6 +167,8 @@ class BlackJack:
             if bet > player.get_count_money():
                 raise BigBetForPlayer(f'У игрока {player.name} нет столько денег. Сделайте ставку меньше')
             else:
+                if player in self._players:
+                    raise RepeatPlayer('Игрок с таким именем в игре уже есть')
                 self._bets[player] = bet
                 self._players.append(player)
     
@@ -277,6 +279,14 @@ class AllPlayersPlayed(Exception):
 class BigBetForPlayer(Exception):
     """ Исключение вызывается при попытке сделать ставку с количеством денег
         выше, чем есть у игрока
+    """
+    
+    def __init__(self, text: str) -> None:
+        self.txt = text
+        
+
+class RepeatPlayer(Exception):
+    """ Исключение вызывается при попытке добавить игроков с одинаковыми именами
     """
     
     def __init__(self, text: str) -> None:
