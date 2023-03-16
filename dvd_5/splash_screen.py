@@ -18,50 +18,94 @@ class SplashScreen:
         Returns:
             tuple[int]: Кортеж, который имеет два элемента x, y = output
         """
-        x = random.randint(0, self.width_window - 1)
-        y = random.randint(0, self.height_window - 1)
+        x = random.randint(0, self.width_window - len(self.printing_figure))
+        y = random.randint(0, self.height_window - len(self.printing_figure))
         return x, y
     
-    def _get_current_steps(self, x, y, step_x, step_y) -> tuple[int]:
-        if x >= self.width_window - len(self.printing_figure):
-            x = self.width_window - len(self.printing_figure)
-            step_x = -1
-        elif x <= 0:
-            x -= step_x
-            step_x = 1
-        if y >= self.height_window - 1:
-            y = self.height_window - 1
-            step_y = -1
-        elif y <= 0:
-            y -= step_y
-            step_y = 1
-        return x, y, step_x, step_y
+    def _get_start_coordinates_for_all_figures(self) -> tuple[list[int]]:
+        """ Метод возвращает кортеж с двумя элементами, которые хранят начальные 
+            координаты по x и y каждого объекта
+
+        Returns:
+            tuple[list[int]]: кортеж с двумя элементами, которые хранят начальные 
+            координаты по x и y каждого объекта
+        """
+        lst_x_coord = []
+        lst_y_coord = []
+        for _ in range(self.count_figures):
+            x, y = self._get_start_coordinates()
+            lst_x_coord.append(x)
+            lst_y_coord.append(y)
+        return lst_x_coord, lst_y_coord
+    
+    def _get_current_steps(self, lst_x: list[int], lst_y: list[int], lst_step_x: list[int], lst_step_y: list[int], ind_f: int):
+        """ Метод определяет значение шагов по координатам для заданной фигуры
+
+        Args:
+            lst_x (list[int]): Содержит координаты x для каждой фигуры
+            lst_y (list[int]): Содержит координаты y для каждой фигуры
+            lst_step_x (list[int]): Содержит значение шага для координаты x 
+                для каждой фигуры
+            lst_step_y (list[int]): Содержит значение шага для координаты y
+                для каждой фигуры
+            ind_f (int): Индекс текущей фигуры
+        """
+        # Определяем необходимо ли изменять координаты и шаги
+        if lst_x[ind_f] >= self.width_window - len(self.printing_figure):
+            lst_x[ind_f] = self.width_window - len(self.printing_figure)
+            lst_step_x[ind_f] = -1
+        elif lst_x[ind_f] <= 0:
+            lst_x[ind_f] -= lst_step_x[ind_f]
+            lst_step_x[ind_f] = 1
+        if lst_y[ind_f] >= self.height_window - 1:
+            lst_y[ind_f] = self.height_window - 1
+            lst_step_y[ind_f] = -1
+        elif lst_y[ind_f] <= 0:
+            lst_y[ind_f] -= lst_step_y[ind_f]
+            lst_step_y[ind_f] = 1
+        
     
     def _animation(self) -> None:
-        x, y = self._get_start_coordinates()
-        step_x = step_y = 1
+        lst_x, lst_y = self._get_start_coordinates_for_all_figures()
+        lst_step_x = [1 for _ in range(self.count_figures)]
+        lst_step_y = [1 for _ in range(self.count_figures)]
         
         while True:
             # определяем размер окна
             self._get_size_window()
-            # Определяем текущие шаги
-            x, y, step_x, step_y = self._get_current_steps(x, y, step_x, step_y)
-            # Рисуем и очищаем 
+            # Очищаем окно
             clear_console()
-            bext.goto(x, y)
-            print(self.printing_figure, end='')
-            x += step_x
-            y += step_y
-            sleep(self.time_sleep)
+            # Перебираем все фигуры
+            for ind_f in range(self.count_figures):
+                # Определяем текущие шаги
+                self._get_current_steps(lst_x, lst_y, lst_step_x, lst_step_y, ind_f)
+                # Рисуем
+                bext.goto(abs(lst_x[ind_f]), abs(lst_y[ind_f]))
+                print(self.printing_figure, end='')
+                # Шагаем и записываем новые координаты
+                lst_x[ind_f] += lst_step_x[ind_f]
+                lst_y[ind_f] += lst_step_y[ind_f]
+                # Создаем задержку для анимации
+                if ind_f == self.count_figures-1:
+                    sleep(self.time_sleep)
                 
     def __init__(self) -> None:
-        self.time_sleep = 0.2
+        self.time_sleep = 0.1
         
         self._get_size_window()
         
+        self.set_count_figures()
         self.set_printing_figure()
         self.set_collor_figure()
         
+    def set_count_figures(self, count: int = 2) -> None:
+        """ Устанавливает количество элементов, которые будут двигаться на экране
+
+        Args:
+            count (int): Устанавливаемое количество. По умолчанию 2.
+        """
+        self.count_figures = count
+    
     def set_printing_figure(self, figure: str = 'DVD') -> None:
         """ Устанавливает строку, которая будет перемещаться по экрану
 
