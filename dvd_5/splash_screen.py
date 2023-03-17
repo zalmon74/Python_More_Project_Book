@@ -41,8 +41,8 @@ class SplashScreen:
             lst_y_coord.append(y)
         return lst_x_coord, lst_y_coord
     
-    def _is_collision_figures(self, lst_x: list[int], lst_y: list[int], lst_step_x: list[int], lst_step_y: list[int]) -> list[tuple[int]]:
-        """ Метод определяем столкновение объектов
+    def _delete_collision_figures(self, lst_x: list[int], lst_y: list[int], lst_step_x: list[int], lst_step_y: list[int]):
+        """ Метод корректировки объектов, которые столкнулис
 
         Args:
             lst_x (list[int]): Содержит координаты x для каждой фигуры
@@ -51,65 +51,33 @@ class SplashScreen:
                 для каждой фигуры
             lst_step_y (list[int]): Содержит значение шага для координаты y
                 для каждой фигуры
-
-        Returns:
-            list[tuple[int]]: Возвращает список, который содержит кортежи с
-                2 индексами фигур, которые столкнулись между собой
         """
-        output = []
+        # Объекты, у которых уже изменили направление
+        collision_figures = []
         # Перебираем каждую фигуру и проверяем, что у нее нет соприкосновений
         # с последующей
         for ind_f_1 in range(len(lst_x)):
-            for ind_f_2 in range(len(lst_x)):
-                
-                if ind_f_1 == ind_f_2:
-                    continue
-                
+            for ind_f_2 in range(ind_f_1+1, len(lst_x)):
                 # Разница координат
                 diff_x = lst_x[ind_f_1] - lst_x[ind_f_2]
                 diff_y = lst_y[ind_f_1] - lst_y[ind_f_2]
-                
                 # Соприкосновение по x
                 if 0 <= abs(diff_x) <= len(self.printing_figure)-1:
                     # Соприкосновение по y
-                    if 0 < abs(diff_y) <= 1:                      
-                        # ind_f_1 сверху (движется вниз-вправо), ind_f_2 снизу
-                        if diff_x > 0 and lst_step_y[ind_f_1] > 0 and lst_step_x[ind_f_1] > 0:
-                            lst_step_x[ind_f_1] = -1
-                            lst_step_y[ind_f_1] = -1
-                            lst_step_x[ind_f_2] = 1
-                            lst_step_y[ind_f_2] = 1
-                        # ind_f_1 сверху (движется вниз), ind_f_2 снизу (движется вверх)
-                        elif diff_x > 0 and (lst_step_y[ind_f_1] > 0 or lst_step_y[ind_f_2] < 0):
-                            lst_step_x[ind_f_1] = -1
-                            lst_step_y[ind_f_1] = -1
-                            lst_step_x[ind_f_2] = 1
-                            lst_step_y[ind_f_2] = 1
-                        # ind_f_1 сверху (движется вниз-влево), ind_f_2 снизу
-                        elif diff_x > 0 and lst_step_y[ind_f_1] > 0 and lst_step_x[ind_f_1] < 0:
-                            lst_step_x[ind_f_1] = 1
-                            lst_step_y[ind_f_1] = -1
-                            lst_step_x[ind_f_2] = -1
-                            lst_step_y[ind_f_2] = 1
-                        # ind_f_1 снизу (движется вверх-вправо), ind_f_2 сверху
-                        elif diff_x < 0 and lst_step_y[ind_f_1] < 0 and lst_step_x[ind_f_1] > 0:
-                            lst_step_x[ind_f_1] = -1
-                            lst_step_y[ind_f_1] = 1
-                            lst_step_x[ind_f_2] = 1
-                            lst_step_y[ind_f_2] = -1
-                        # ind_f_1 снизу (движется вверх), ind_f_2 сверху (движется вниз)
-                        elif diff_x > 0 and (lst_step_y[ind_f_1] > 0 or lst_step_y[ind_f_2] < 0):
-                            lst_step_x[ind_f_1] = 1
-                            lst_step_y[ind_f_1] = 1
-                            lst_step_x[ind_f_2] = -1
-                            lst_step_y[ind_f_2] = -1
-                        # ind_f_1 сверху (движется вниз-влево), ind_f_2 снизу
-                        elif diff_x > 0 and lst_step_y[ind_f_1] > 0 and lst_step_x[ind_f_1] < 0:
-                            lst_step_x[ind_f_1] = 1
-                            lst_step_y[ind_f_1] = 1
-                            lst_step_x[ind_f_2] = -1
-                            lst_step_y[ind_f_2] = -1
-        return output
+                    if abs(diff_y) == 1:
+                        # Если уже изменяли направление данной фигуры
+                        # Но столкновение происходит с другой фигурой
+                        if ind_f_2 in collision_figures:
+                            lst_step_x[ind_f_2] = -lst_step_x[ind_f_2]
+                            lst_step_y[ind_f_2] = -lst_step_y[ind_f_2]    
+                            collision_figures.append(ind_f_2)    
+                            continue
+                        collision_figures.append(ind_f_2)
+                        # Изменяем направление движение на обратное, после удара
+                        lst_step_x[ind_f_1] = -lst_step_x[ind_f_1]
+                        lst_step_y[ind_f_1] = -lst_step_y[ind_f_1]
+                        lst_step_x[ind_f_2] = -lst_step_x[ind_f_2]
+                        lst_step_y[ind_f_2] = -lst_step_y[ind_f_2]
     
     def _get_current_steps_for_current_figure(self, lst_x: list[int], lst_y: list[int], lst_step_x: list[int], lst_step_y: list[int], ind_f: int):
         """ Метод определяет значение шагов по координатам для заданной фигуры
@@ -126,14 +94,14 @@ class SplashScreen:
         if lst_x[ind_f] >= self.width_window - len(self.printing_figure):
             lst_x[ind_f] = self.width_window - len(self.printing_figure)
             lst_step_x[ind_f] = -1
-        elif lst_x[ind_f] <= 0:
+        elif lst_x[ind_f] <= 1:
             lst_x[ind_f] -= lst_step_x[ind_f]
             lst_step_x[ind_f] = 1
         if lst_y[ind_f] >= self.height_window - 1:
             lst_y[ind_f] = self.height_window - 1
             lst_step_y[ind_f] = -1
-        elif lst_y[ind_f] <= 0:
-            lst_y[ind_f] -= lst_step_y[ind_f]
+        elif lst_y[ind_f] <= 1:
+            lst_y[ind_f] = 1
             lst_step_y[ind_f] = 1
     
     def _get_current_steps(self, lst_x: list[int], lst_y: list[int], lst_step_x: list[int], lst_step_y: list[int], ind_f: int):
@@ -150,8 +118,8 @@ class SplashScreen:
         """
         # Определяем необходимо ли изменять координаты и шаги для выбранной фигры
         self._get_current_steps_for_current_figure(lst_x, lst_y, lst_step_x, lst_step_y, ind_f)
-        #
-        self._is_collision_figures(lst_x, lst_y, lst_step_x, lst_step_y)
+        # Проверяем на столкновение фигур, чтобы убрать колизии между ними
+        self._delete_collision_figures(lst_x, lst_y, lst_step_x, lst_step_y)
     
     def _animation(self) -> None:
         """ Метод, которая отвечает за передвижение фигуры
@@ -188,7 +156,7 @@ class SplashScreen:
         self.set_printing_figure()
         self.set_collor_figure()
         
-    def set_count_figures(self, count: int = 2) -> None:
+    def set_count_figures(self, count: int = 4) -> None:
         """ Устанавливает количество элементов, которые будут двигаться на экране
 
         Args:
