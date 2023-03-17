@@ -1,3 +1,6 @@
+""" Основной файл проекта
+"""
+
 import random
 from time import sleep
 
@@ -66,6 +69,8 @@ class SplashScreen:
         
     
     def _animation(self) -> None:
+        """ Метод, которая отвечает за передвижение фигуры
+        """
         lst_x, lst_y = self._get_start_coordinates_for_all_figures()
         lst_step_x = [1 for _ in range(self.count_figures)]
         lst_step_y = [1 for _ in range(self.count_figures)]
@@ -123,6 +128,8 @@ class SplashScreen:
         bext.fg(color)
     
     def start(self) -> None:
+        """ Метод, который запускает анимацию
+        """
         # Вызываем функцию, описывающую анимацию движения
         try:
             self._animation()
