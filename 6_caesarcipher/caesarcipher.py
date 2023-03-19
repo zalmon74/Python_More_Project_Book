@@ -49,6 +49,57 @@ class CaesarCipher:
             raise LanguageException(f'Символа "{symbol}" нет в алфавите "{self.current_language}" языка.')
         return ind_sym_in_alphabet
     
+    def _get_new_index_symbol(self, curr_index: int, f_encode: bool) -> int:
+        """ Метод рассчитывает новый индекс символа, для кодирования или
+            декодирования, зависимости от флага
+
+        Args:
+            curr_index (int): Текущий индекс символа в алфавите
+            f_encode (bool): Флаг кодирования или декодирования информации
+
+        Returns:
+            int: Новый индекс символа из алфавита
+        """
+        if f_encode:
+            new_ind_sym = (curr_index+self._key)%len(self._alphabet)
+        else:
+            new_ind_sym = (curr_index-self._key)%len(self._alphabet)
+        return new_ind_sym
+    
+    def _encode_decode_text(self, text: str, f_encode: bool) -> str:
+        """ Метод кодирует или декодирует текст, зависимости от флага
+
+        Args:
+            text (str): Текст, который необходимо закодировать, или декодировать
+            f_encode (bool): Флаг, который определяет, кодировать или 
+                декодивароть информацию
+
+        Returns:
+            str: Закодированный или декодированный текст, зависимости от флага
+        """
+        # Устанавливаем алфавит
+        self._set_current_alphabet()
+        # Проверяем на наличие ключа
+        self._check_key()
+        # Выходной текст
+        output = ''
+        # Шифруем текст
+        ind_sym = 0
+        while ind_sym < len(text):
+            # Определяем индекс в алфавите текущего символа
+            ind_alphabet = self._check_symbol_in_alphabet(text[ind_sym])
+            # Записываем новый символ
+            if ind_alphabet:
+                # Кодируем или декодируем информацию
+                new_ind_sym = self._get_new_index_symbol(ind_alphabet, f_encode)
+                new_symbol = self._alphabet[new_ind_sym]
+            else:
+                new_symbol = text[ind_sym]
+            output += new_symbol
+            # К следующему символу
+            ind_sym += 1
+        return output
+    
     def __init__(self) -> None:
         # Ключ кодирования/декодирования
         self._key = None
@@ -87,26 +138,7 @@ class CaesarCipher:
         Returns:
             str: Закодированный текст
         """
-        # Устанавливаем алфавит
-        self._set_current_alphabet()
-        # Проверяем на наличие ключа
-        self._check_key()
-        # Выходной текст
-        output = ''
-        # Шифруем текст
-        ind_sym = 0
-        while ind_sym < len(text):
-            # Определяем индекс в алфавите текущего символа
-            ind_alphabet = self._check_symbol_in_alphabet(text[ind_sym])
-            # Записываем новый символ
-            if ind_alphabet:
-                new_symbol = self._alphabet[(ind_alphabet+self._key)%len(self._alphabet)]
-            else:
-                new_symbol = text[ind_sym]
-            output += new_symbol
-            # К следующему символу
-            ind_sym += 1
-        return output
+        return self._encode_decode_text(text, True)
     
     def decoding_text(self, text: str) -> str:
         """ Декодирование текста
@@ -117,26 +149,7 @@ class CaesarCipher:
         Returns:
             str: Декодированный текст
         """
-        # Устанавливаем алфавит
-        self._set_current_alphabet()
-        # Проверяем на наличие ключа
-        self._check_key()
-        # Выходной текст
-        output = ''
-        # Расшифровываем текст
-        ind_sym = 0
-        while ind_sym < len(text):
-            # Определяем индекс в алфавите текущего символа
-            ind_alphabet = self._check_symbol_in_alphabet(text[ind_sym])
-            # Записываем новый символ
-            if ind_alphabet:
-                new_symbol = self._alphabet[abs(ind_alphabet-self._key)%len(self._alphabet)]
-            else:
-                new_symbol = text[ind_sym]
-            output += new_symbol
-            # К следующему символу
-            ind_sym += 1
-        return output
+        return self._encode_decode_text(text, False)
         
         
 class LanguageException(Exception):
