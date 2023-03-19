@@ -1,7 +1,7 @@
 """ Основной файл проекта, который содержит класс
 """
 
-from constants import Constants
+from .constants import Constants
 
 
 class CaesarCipher:
