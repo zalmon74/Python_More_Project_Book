@@ -40,7 +40,7 @@ class CaesarCipher:
                 если заданный символ является знаком препинания
         """
         # Проверяем, что символ на знак препинания
-        if symbol in Constants.PUNCTUATION:
+        if symbol in Constants.PUNCTUATION or symbol in Constants.NUMBERS:
             return None
         # Находим символ в алфавите
         try:
