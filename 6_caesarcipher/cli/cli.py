@@ -3,7 +3,7 @@
 
 import os
 
-from caesarcipher.caesarcipher import CaesarCipher
+from caesarcipher.caesarcipher import CaesarCipher, LanguageException
 from caesarcipher.constants import Constants
 
 from .cli_settings import CLISettings
@@ -110,6 +110,11 @@ class CLICaesarCipher:
         # Получаем текст, который необходимо зашифровать/дешифровать
         self._get_input_encode_decode_text()
         # Кодируем/декодируем текст
-        self._encode_decode_text()
-        # Выводим полученный текст, на экран
-        self._pinting_result_text()
+        try:
+            self._encode_decode_text()
+        except LanguageException as e:
+            self._clear_console()
+            print(e)
+        else:
+            # Выводим полученный текст, на экран
+            self._pinting_result_text()
