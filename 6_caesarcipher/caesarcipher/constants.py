@@ -6,7 +6,8 @@ import string
 
 class Constants:
     # Все знаки препинания
-    PUNCTUATION = list(string.punctuation)
+    PUNCTUATION = list(string.punctuation + ' ')
+    NUMBERS = [chr(sym) for sym in range(ord('0'), ord('9')+1)]
     # Алфавиты
     RU_ALPHABET = [chr(sym) for sym in range(ord('а'), ord('я')+1)]
     EN_ALPHABET = list(string.ascii_lowercase)
