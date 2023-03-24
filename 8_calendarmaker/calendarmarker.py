@@ -166,6 +166,28 @@ class CalendarMaker:
             output.extend(lst_item)
         return output
 
+    def _create_name_file(self, year: int, mon: int) -> str:
+        """ Создает имя файла для сохранения календаря по умолчанию
+
+        Args:
+            year (int): Год
+            mon (int): Месяц
+
+        Returns:
+            str: Созданное имя файла
+        """
+        return f'calendar_{year}_{mon}.txt'
+    
+    def _save_str_to_file(self, string: str, name_file) -> None:
+        """ Сохраняет строку в файл
+
+        Args:
+            string (str): Строка, которую необходимо сохранить
+            name_file (str): Имя файла
+        """
+        with open(name_file, 'w') as file:
+            file.write(string)
+    
     def __init__(self) -> None:
         # Устанавливаем, что неделя начинается с понедельника
         setfirstweekday(MONDAY)
@@ -186,3 +208,18 @@ class CalendarMaker:
         mat_days = self._create_mat_with_days(year, mon)
         lst_calendar.extend(self._create_N_M_items_for_calendar(mat_days))
         return '\n'.join(lst_calendar)
+    
+    def create_calendar_and_save_in_file(self, year: int, mon: int, name_file: str = None) -> None:
+        """ Создает календарь и записывает его в файл
+
+        Args:
+            year (int): Год
+            mon (int): Месяц
+            name_file (str): Имя файла, если не задано, то генерируется 
+                автоматически. По умолчанию None.
+        """
+        # Создаем календарь
+        calendar_str = self.create_calendar(year, mon)
+        # Сохраняем его в файл
+        name_file = name_file or self._create_name_file(year, mon)
+        self._save_str_to_file(calendar_str, name_file)
