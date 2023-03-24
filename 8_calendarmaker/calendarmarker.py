@@ -1,12 +1,14 @@
 """ Модуль содержит основной класс для генерации календаря
 """
 
+from calendar import MONDAY, monthcalendar, monthrange, setfirstweekday
+
 from constants import Constants
 
 
 class CalendarMaker:
     
-    def create_title_calendar(self) ->str :
+    def _create_title_calendar(self) -> str:
         """ Создаем строку с заголовком для календаря
 
         Returns:
@@ -89,7 +91,61 @@ class CalendarMaker:
                     output[ind_s] += lst_item[ind_s]
         return output
 
-    def create_N_M_items_for_calendar(self, mat_days: list[list[int]]) -> list[str]:
+    def _get_next_prev_max_day_mon(self, year: int, mon: int) -> tuple[int]:
+        """ Определяет максимальный день в предыдущем и следующем месяце
+            относительно заданного в определенном году
+
+        Args:
+            mon (int): Заданный месяц
+            year (int): Заданный год
+
+        Returns:
+            tuple[int]: Кортеж, который будет содержать два элемента
+                [0] - prev_max_day_mon (Количество дней в предыдущем месяце)
+                [1] - next_max_day_mon (Количество дней в следующем месяце)
+        """
+        if mon != 1:
+            _, prev_max_day = monthrange(year, mon-1)
+        else:
+            _, prev_max_day = monthrange(year-1, 12)
+        if mon != 12:
+            _, next_max_day = monthrange(year, mon+1)
+        else:
+            _, next_max_day = monthrange(year+1, 1)
+        return prev_max_day, next_max_day
+    
+    def _create_mat_with_days(self, year: int, mon: int) -> list[list[int]]:
+        """ создает матрицу с днями для конкртеного месяца и года
+
+        Args:
+            year (int): Год
+            mon (int): Номер месяца
+
+        Returns:
+            list[list[int]]: Созданная матрица с днями
+        """
+        # Получаем матрицу, но в предыдущем и следующем месяце дни, которые
+        # относятся к следующим месяцам заполнены нулями
+        output = monthcalendar(year, mon)
+        _, curr_max_day_mon = monthrange(year, mon)
+        # Определяем количество дней в предыдущем и следующем месяце
+        prev_max_day_mon, next_max_day_mon = self._get_next_prev_max_day_mon(year, mon)
+        # Заполняем не нулями дни, которые находятся в одной недели 
+        # Первый
+        index_stop = output[0].index(1)
+        day = prev_max_day_mon - index_stop + 1
+        for cur_ind in range(index_stop):
+            output[0][cur_ind] = day
+            day += 1
+        # Последний
+        index_start = output[-1].index(curr_max_day_mon)+1
+        day = 1
+        for cur_ind in range(index_start, 7):
+            output[-1][cur_ind] = day
+            day += 1
+        return output
+
+    def _create_N_M_items_for_calendar(self, mat_days: list[list[int]]) -> list[str]:
         """ Создает NxM ячеек календаря зависимости от размера входной матрица
             с номерами дней
 
@@ -109,3 +165,24 @@ class CalendarMaker:
                 del lst_item[0]
             output.extend(lst_item)
         return output
+
+    def __init__(self) -> None:
+        # Устанавливаем, что неделя начинается с понедельника
+        setfirstweekday(MONDAY)
+
+    def create_calendar(self, year: int, mon: int) -> str:
+        """ Создает календарь на заданный год и месяц в виде строковых
+            объектов
+
+        Args:
+            year (int): Год
+            mon (int): Месяц
+
+        Returns:
+            str: Строка, которая содержит в себе созданный календарь
+        """
+        lst_calendar = []
+        lst_calendar.append(self._create_title_calendar())
+        mat_days = self._create_mat_with_days(year, mon)
+        lst_calendar.extend(self._create_N_M_items_for_calendar(mat_days))
+        return '\n'.join(lst_calendar)
